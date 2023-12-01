@@ -30,13 +30,45 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  flutter_bloc: ^8.1.3
+  #state Manegment
+  freezed: ^2.4.5
+  #generate api  service using retrofit(mianly use with cubit & retrofit)
+  freezed_annotation: ^2.4.1
+  #Annotations for the freezed code-generator.
+  get_it: ^7.6.4
+  #for dependency_injection_
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
+  # networking
+  dio: ^5.3.3
+  # call api --> A powerful HTTP networking package, supports Interceptors,
+  # Aborting and canceling a request, Custom adapters, Transformers, etc.
+  retrofit: ^4.0.3
+  retrofit_generator: ^8.0.4
+  pretty_dio_logger: ^1.3.1
+  # btal3 4akl el kalam m3 api say Posts & requests
+  intl: ^0.18.0
+  easy_localization: ^3.0.0
   flutter_screenutil: ^5.9.0
+  flutter_native_splash: ^2.3.6
+  flutter_svg: ^2.0.9
+  path: ^1.8.3
+  # image
+  image_picker: ^1.0.4
+  # select from camera & gallery
+  google_ml_kit: ^0.16.3
+  # verify Face recognition
+  flutter_verification_code: ^1.1.7
+  google_fonts: ^6.1.0
+  animate_do: ^3.0.2
 
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
