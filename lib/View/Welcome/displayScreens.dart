@@ -84,10 +84,8 @@ class DisplayScreens extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return CompleteShow();
-                  }));
+                  Navigator.pushReplacementNamed(context,CompleteShow.routeName ,arguments: "ahmed");
+
                 },
                 child: FadeInRight(delay: const Duration(microseconds: 200),
                   child: Text(

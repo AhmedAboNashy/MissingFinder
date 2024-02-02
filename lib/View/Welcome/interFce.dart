@@ -5,7 +5,7 @@ import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
 import 'package:missing_finder/View/Welcome/displayScreens.dart';
 
 class InterFace extends StatelessWidget {
-  static const String routeName = ('face');
+  static const String routeName = ('/');
   @override
   Widget build(BuildContext context) {
     return Scaffold(

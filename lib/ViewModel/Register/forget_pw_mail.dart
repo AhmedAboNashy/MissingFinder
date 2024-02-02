@@ -1,11 +1,24 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
+import 'package:missing_finder/ViewModel/LogIn/forgot_Pw_mail_when%20registering.dart';
+import 'package:missing_finder/ViewModel/Logic/Cubit/auth_cubit.dart';
 import 'package:missing_finder/ViewModel/Register/forget_pw_pohone.dart';
 
-class ForgetPwByMail extends StatelessWidget {
+class ForgetPwByMail extends StatefulWidget {
   static const String routeName = 'ForgetPwByEmail';
+
+  @override
+  State<ForgetPwByMail> createState() => _ForgetPwByMailState();
+}
+
+class _ForgetPwByMailState extends State<ForgetPwByMail> {
+  TextEditingController email = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,67 +59,117 @@ class ForgetPwByMail extends StatelessWidget {
               ),
               FadeInDown(
                 delay: const Duration(milliseconds: 100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Enter The E-mail Address to get Link Reset',
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(
-                              MyTheme.textColor,
-                            ))),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Text('Your Password',
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(
-                              MyTheme.textColor,
-                            ))),
-                  ],
+                child: BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is ResetWithEmailSuccessState) {
+                      Navigator.pop(context);
+
+                      Navigator.pushNamed(
+                          context, ForgetPwWhenLoginByMail.routeName);
+                    }
+                    if (state is ConfirmatinResetByMailToFailedState) {
+                      showAboutDialog(context: context, children: [
+                        Text(
+                          ' E-Mail is failed ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.black,
+                          ),
+                        )
+                      ]);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Container(
+                        alignment: Alignment.center,
+                        height: 50.h,
+                        width: 70.w,
+                        child: Text(state.ResetPassWithMail),
+                      )));
+                    }
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Enter The E-mail Address to get Link Reset',
+                            style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Color(
+                                  MyTheme.textColor,
+                                ))),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Text('Your Password',
+                            style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Color(
+                                  MyTheme.textColor,
+                                ))),
+                      ],
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 40.h),
               SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 15.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16.0.r),
-                      child: SingleChildScrollView(
-                        child: FadeInRight(
-                          delay: const Duration(milliseconds: 200),
-                          child: TextField(
-                            enableSuggestions: true,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              fillColor: Color(MyTheme.bGround_Button),
-                              filled: true,
-                              labelStyle: TextStyle(
-                                  color: Color(MyTheme.textverifiCode)),
-                              hintStyle: TextStyle(
-                                  color: Color(MyTheme.textverifiCode)),
-                              hintText: ('E-mail addres'),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30.r)),
-                                borderSide: BorderSide(color: Colors.brown),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white10),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 15.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(16.0.r),
+                        child: SingleChildScrollView(
+                          child: FadeInRight(
+                            delay: const Duration(milliseconds: 200),
+                            child: TextFormField(
+                              controller: email,
+                              enableSuggestions: true,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                fillColor: Color(MyTheme.bGround_Button),
+                                filled: true,
+                                labelStyle: TextStyle(
+                                    color: Color(MyTheme.textverifiCode)),
+                                hintStyle: TextStyle(
+                                    color: Color(MyTheme.textverifiCode)),
+                                hintText: ('E-mail address'),
+                                border: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(30.r))),
+                                      BorderRadius.all(Radius.circular(30.r)),
+                                  borderSide: BorderSide(color: Colors.brown),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white10),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(30.r))),
+                              ),
+                              validator: (value) {
+                                if (email.text.trim().isEmpty == null) {
+                                  return 'Please Enter E-mail or Phone';
+                                }
+
+                                var regex = RegExp(r'^[^@]+@[^\.]+\..+');
+
+                                // r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$]');
+                                if (!regex.hasMatch(email.text)) {
+                                  return "Invalid e-mail";
+                                }
+                                return null;
+                              },
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 12.h),
@@ -166,11 +229,25 @@ class ForgetPwByMail extends StatelessWidget {
                                     color: Color(MyTheme.borderTextField)),
                                 backgroundColor: Color(MyTheme.bGround_Button)),
                             onPressed: () {
+                              if (formKey.currentState!.validate() == true) {
+                                // h3ml intance mn auth Cubit
+                                BlocProvider.of<AuthCubit>(context)
+                                    .RessetPasswordWithEmail(
+                                  email: email.text,
+                                );
+                              } else {
+                                print('Un Successfull');
+                              }
+
                               Navigator.pushNamedAndRemoveUntil(context,
-                                  ForgetPwByPhone.routeName, (route) => false);
+                                  ForgetPwWhenLoginByMail.routeName, (
+                                      route) => false);
                             },
                             child: Text(
-                              'Continue',
+                              AutofillHints.addressState
+                                      is ConfirmatinResetByMailLoadingState
+                                  ? "Loading.."
+                                  : 'Continue',
                               style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w500,

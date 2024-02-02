@@ -5,6 +5,7 @@ import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
 import 'package:missing_finder/ViewModel/Register/createAccount.dart';
 
 class CompleteShow extends StatelessWidget {
+  static const String routeName = "CompleteShow";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

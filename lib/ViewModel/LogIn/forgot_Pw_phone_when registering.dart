@@ -18,7 +18,7 @@ class ForgetPwWhenLoginBySms extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 100.h,
+                height: 80.h,
               ),
               FadeInDown(
                 delay: const Duration(milliseconds: 30),
@@ -266,65 +266,70 @@ class ForgetPwWhenLoginBySms extends StatelessWidget {
                 height: 20.h,
               ),
               Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 39.h,
-                      width: 195.w,
-                      child: FadeInRight(
-                        delay: const Duration(milliseconds: 300),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40.r)),
-                                side: BorderSide(
-                                    color: Color(MyTheme.borderverifiCode)),
-                                backgroundColor:
-                                    Color(MyTheme.back_verifi_Code)),
-                            onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  ResetPassword.routeName, (route) => false);
-                            },
-                            child: Text(
-                              'Verify Code',
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(
-                                    MyTheme.text_Button,
-                                  )),
-                            )),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 39.h,
+                        width: 195.w,
+                        child: FadeInRight(
+                          delay: const Duration(milliseconds: 300),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(40.r)),
+                                  side: BorderSide(
+                                      color: Color(MyTheme.borderverifiCode)),
+                                  backgroundColor:
+                                      Color(MyTheme.back_verifi_Code)),
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    ResetPassword.routeName, (route) => false);
+                              },
+                              child: Text(
+                                'Verify Code',
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(
+                                      MyTheme.text_Button,
+                                    )),
+                              )),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    SizedBox(
-                      height: 38.h,
-                      width: 194.w,
-                      child: FadeInRight(
-                        delay: const Duration(milliseconds: 350),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40.r)),
-                                side: BorderSide(
-                                    color: Color(MyTheme.borderTextField)),
-                                backgroundColor: Color(MyTheme.bGround_Button)),
-                            onPressed: () {},
-                            child: Text(
-                              'Resend Code',
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(
-                                    MyTheme.text_Button,
-                                  )),
-                            )),
+                      SizedBox(
+                        height: 20.h,
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 38.h,
+                        width: 194.w,
+                        child: FadeInRight(
+                          delay: const Duration(milliseconds: 350),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(40.r)),
+                                  side: BorderSide(
+                                      color: Color(MyTheme.borderTextField)),
+                                  backgroundColor:
+                                      Color(MyTheme.bGround_Button)),
+                              onPressed: () {},
+                              child: Text(
+                                'Resend Code',
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(
+                                      MyTheme.text_Button,
+                                    )),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],

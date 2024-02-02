@@ -1,13 +1,23 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
 import 'package:missing_finder/ViewModel/LogIn/forgot_Pw_mail_when%20registering.dart';
+import 'package:missing_finder/ViewModel/LogIn/forgot_Pw_phone_when%20registering.dart';
+import 'package:missing_finder/ViewModel/Logic/Cubit/auth_cubit.dart';
 import 'package:missing_finder/ViewModel/Register/forget_pw_mail.dart';
 
-class ForgetPwByPhone extends StatelessWidget {
+class ForgetPwByPhone extends StatefulWidget {
   static const String routeName = 'ForgetCodePhone';
 
+  @override
+  State<ForgetPwByPhone> createState() => _ForgetPwByPhoneState();
+}
+
+class _ForgetPwByPhoneState extends State<ForgetPwByPhone> {
+  TextEditingController phone = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,42 +86,87 @@ class ForgetPwByPhone extends StatelessWidget {
               ),
               SizedBox(height: 40.h),
               SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 15.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16.0.r),
-                      child: SingleChildScrollView(
-                        child: FadeInRight(
-                          delay: const Duration(milliseconds: 150),
-                          child: TextField(
-                            enableSuggestions: true,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              fillColor: Color(MyTheme.bGround_Button),
-                              filled: true,
-                              labelStyle: TextStyle(
-                                  color: Color(MyTheme.textverifiCode)),
-                              hintStyle: TextStyle(
-                                  color: Color(MyTheme.textverifiCode)),
-                              hintText: ('Mobile Number'),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30.r)),
-                                borderSide: BorderSide(color: Colors.brown),
+                child: BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is ResetWithPhoneSuccessState) {
+                      Navigator.pop(context);
+
+                      Navigator.pushNamed(
+                          context, ForgetPwWhenLoginBySms.routeName);
+                    }
+                    if (state is ConfirmatinResetByPhoneToFailedState) {
+                      showAboutDialog(context: context, children: [
+                        Text(
+                          ' Phone is failed ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.black,
+                          ),
+                        )
+                      ]);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Container(
+                        alignment: Alignment.center,
+                        height: 50.h,
+                        width: 70.w,
+                        child: Text(state.ResetPassWithPhone),
+                      )));
+                    }
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    return Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 15.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(16.0.r),
+                            child: SingleChildScrollView(
+                              child: FadeInRight(
+                                delay: const Duration(milliseconds: 150),
+                                child: TextFormField(
+                                  controller: phone,
+                                  enableSuggestions: true,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    fillColor: Color(MyTheme.bGround_Button),
+                                    filled: true,
+                                    labelStyle: TextStyle(
+                                        color: Color(MyTheme.textverifiCode)),
+                                    hintStyle: TextStyle(
+                                        color: Color(MyTheme.textverifiCode)),
+                                    hintText: ('Mobile Number'),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30.r)),
+                                      borderSide:
+                                          BorderSide(color: Colors.brown),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white10),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(30.r))),
+                                  ),
+                                  validator: (value) {
+                                    if (phone.text.trim().isEmpty == null) {
+                                      return 'Please Enter  Phone';
+                                    }
+
+                                    return null;
+                                  },
+                                ),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white10),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30.r))),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 12.h),
@@ -171,13 +226,21 @@ class ForgetPwByPhone extends StatelessWidget {
                                     color: Color(MyTheme.borderTextField)),
                                 backgroundColor: Color(MyTheme.bGround_Button)),
                             onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  ForgetPwWhenLoginByMail.routeName,
-                                  (route) => false);
+                              if (formKey.currentState!.validate() == true) {
+                                // h3ml intance mn auth Cubit
+                                BlocProvider.of<AuthCubit>(context)
+                                    .RessetPasswordWithPhone(
+                                  phone: phone.text,
+                                );
+                              } else {
+                                print('Un Successfull');
+                              }
                             },
                             child: Text(
-                              'Continue',
+                              AutofillHints.addressState
+                                      is ConfirmatinResetByPhoneLoadingState
+                                  ? "Loading.."
+                                  : 'Continue',
                               style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w500,

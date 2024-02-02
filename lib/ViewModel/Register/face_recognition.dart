@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
 import 'package:missing_finder/ViewModel/Register/confirmation_code_sms.dart';
 
@@ -18,8 +17,9 @@ class FaceRecognition extends StatefulWidget {
 
 class _FaceRecognitionState extends State<FaceRecognition> {
   File? _image;
-  List<Face> faces = [];
 
+  var _start_date;
+  bool isMale = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +31,7 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 20.h,
+                    height: 30.h,
                   ),
                   FadeInDown(
                     delay: const Duration(milliseconds: 50),
@@ -56,8 +56,8 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                   FadeInDown(
                     delay: const Duration(milliseconds: 100),
                     child: Container(
-                      height: 250.h,
-                      width: 200.w,
+                      height: 200.h,
+                      width: 230.w,
                       color: Colors.grey,
                       child: _image == null
                           ? Center(
@@ -67,7 +67,8 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                                 color: Colors.black,
                               ),
                             )
-                          : Image.file(_image!),
+                          : FittedBox(
+                              fit: BoxFit.fill, child: Image.file(_image!)),
                     ),
                   ),
                   SizedBox(height: 10.h),
@@ -101,14 +102,8 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                                     color: Color(MyTheme.borderTextField)),
                                 backgroundColor: Color(MyTheme.bGround_Button)),
                             onPressed: () {
-                              _pickImage(ImageSource.camera)
-                                  //select from camera
-                                  .then((value) {
-                                if (_image != null) {
-                                  _detectFaces(_image!);
-                                 // numbrer of people
-                                }
-                              });
+                              _pickImage(ImageSource.camera);
+                              //select from camera
                             },
                           ),
                         ),
@@ -146,11 +141,7 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                                     color: Color(MyTheme.borderTextField)),
                                 backgroundColor: Color(MyTheme.bGround_Button)),
                             onPressed: () {
-                              _pickImage(ImageSource.gallery).then((value) {
-                                if (_image != null) {
-                                  _detectFaces(_image!);
-                                }
-                              });
+                              _pickImage(ImageSource.gallery);
                             },
                           ),
                         ),
@@ -159,16 +150,6 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                   ),
                   SizedBox(
                     height: 7.h,
-                  ),
-                  FadeInRight(
-                    delay: const Duration(milliseconds: 360),
-                    child: Text(
-                      'The Number Of people : ${faces.length}',
-                      style: TextStyle(
-                          color: Color(MyTheme.textColor),
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w400),
-                    ),
                   ),
                   SizedBox(
                     height: 35.h,
@@ -187,58 +168,64 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                         SizedBox(
                           width: 58.w,
                         ),
-                        Stack(
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  height: 37.h,
-                                  width: 90.w,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Male',
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Color(MyTheme.textColor)),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.r)),
-                                      side: BorderSide(color: Colors.brown),
-                                      backgroundColor: Color(
-                                        MyTheme.backgroundInterface,
-                                      ),
-                                    ),
+                            SizedBox(
+                              height: 37.h,
+                              width: 90.w,
+                              child: TextButton(
+                                onPressed: () {
+                                  isMale = true;
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  'Male',
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Color(MyTheme.textColor)),
+                                ),
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.r)),
+                                  side: BorderSide(color: Colors.brown),
+                                  backgroundColor: Color(
+                                    isMale
+                                        ? 0xff707070
+                                        : MyTheme.backgroundInterface,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 20.w,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20.w,
+                            ),
+                            SizedBox(
+                              height: 37.h,
+                              width: 90.w,
+                              child: TextButton(
+                                onPressed: () {
+                                  isMale = false;
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  'Female',
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Color(MyTheme.textColor)),
                                 ),
-                                SizedBox(
-                                  height: 37.h,
-                                  width: 90.w,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Female',
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Color(MyTheme.textColor)),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.r)),
-                                      side: BorderSide(color: Colors.brown),
-                                      backgroundColor: Color(
-                                        MyTheme.backgroundInterface,
-                                      ),
-                                    ),
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.r)),
+                                  side: BorderSide(color: Colors.brown),
+                                  backgroundColor: Color(
+                                    !isMale
+                                        ? 0xffffff
+                                        : MyTheme.backgroundInterface,
                                   ),
-                                )
-                              ],
+                                ),
+                              ),
                             )
                           ],
                         )
@@ -268,74 +255,172 @@ class _FaceRecognitionState extends State<FaceRecognition> {
                               children: [
                                 SizedBox(
                                   height: 35.h,
-                                  width: 55.w,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'DD',
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Color(MyTheme.textColor)),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.r)),
-                                      side: BorderSide(color: Colors.brown),
-                                      backgroundColor: Color(
-                                        MyTheme.backgroundInterface,
+                                  width: 60.w,
+                                  child: FadeInRight(
+                                    delay: const Duration(milliseconds: 350),
+                                    child: TextFormField(
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 15.sp),
+                                      cursorColor:
+                                          Color(MyTheme.textverifiCode),
+
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      enableSuggestions: true,
+                                      keyboardType: TextInputType.number,
+                                      maxLines: 1,
+                                      decoration: InputDecoration(
+                                        fillColor:
+                                            Color(MyTheme.backgroundInterface),
+                                        filled: true,
+                                        labelStyle: TextStyle(
+                                            color: Color(MyTheme.textRegister)),
+                                        iconColor: Colors.white,
+                                        hintStyle: TextStyle(
+                                          color: Color(
+                                            MyTheme.textRegister,
+                                          ),
+                                        ),
+                                        hintText: ('DD'),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.r)),
+                                          borderSide:
+                                              BorderSide(color: Colors.brown),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.r)),
+                                            borderSide: BorderSide(
+                                                color: Colors.white10)),
                                       ),
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
+                                          return 'Please Enter Day';
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   ),
+
+                                  // onPressed: () {},
+                                  // child: Text(
+                                  //   'DD',
+                                  //   style: TextStyle(
+                                  //       fontSize: 16.sp,
+                                  //       color: Color(MyTheme.textColor)),
+                                  // ),
+                                  // style: TextButton.styleFrom(
+                                  //   shape: RoundedRectangleBorder(
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(20.r)),
+                                  //   side: BorderSide(color: Colors.brown),
+                                  //   backgroundColor: Color(
+                                  //     MyTheme.backgroundInterface,
+                                  //   ),
+                                  // ),
                                 ),
                                 SizedBox(
-                                  width: 16.w,
+                                  width: 10.w,
                                 ),
                                 SizedBox(
                                   height: 35.h,
-                                  width: 55.w,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'MM',
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Color(MyTheme.textColor)),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.r)),
-                                      side: BorderSide(color: Colors.brown),
-                                      backgroundColor: Color(
-                                        MyTheme.backgroundInterface,
+                                  width: 60.w,
+                                  child: TextFormField(
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 15.sp),
+                                    cursorColor:
+                                    Color(MyTheme.textverifiCode),
+
+                                    textAlignVertical:
+                                    TextAlignVertical.center,
+                                    enableSuggestions: true,
+                                    keyboardType: TextInputType.number,
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      fillColor:
+                                      Color(MyTheme.backgroundInterface),
+                                      filled: true,
+                                      labelStyle: TextStyle(
+                                          color: Color(MyTheme.textRegister)),
+                                      iconColor: Colors.white,
+                                      hintStyle: TextStyle(
+                                        color: Color(
+                                          MyTheme.textRegister,
+                                        ),
                                       ),
+                                      hintText: ('MM'),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.r)),
+                                        borderSide:
+                                        BorderSide(color: Colors.brown),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.r)),
+                                          borderSide: BorderSide(
+                                              color: Colors.white10)),
                                     ),
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return 'Please Enter Day';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 16.w,
+                                  width: 10.w,
                                 ),
                                 SizedBox(
                                   height: 35.h,
-                                  width: 55.w,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'yyyy',
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Color(MyTheme.textColor)),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.r)),
-                                      side: BorderSide(color: Colors.brown),
-                                      backgroundColor: Color(
-                                        MyTheme.backgroundInterface,
+                                  width: 60.w,
+                                  child: TextFormField(
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 15.sp),
+                                    cursorColor:
+                                    Color(MyTheme.textverifiCode),
+
+                                    textAlignVertical:
+                                    TextAlignVertical.center,
+                                    enableSuggestions: true,
+                                    keyboardType: TextInputType.number,
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      fillColor:
+                                      Color(MyTheme.backgroundInterface),
+                                      filled: true,
+                                      labelStyle: TextStyle(
+                                          color: Color(MyTheme.textRegister)),
+                                      iconColor: Colors.white,
+                                      hintStyle: TextStyle(
+                                        color: Color(
+                                          MyTheme.textRegister,
+                                        ),
                                       ),
+                                      hintText: ('yyyy'),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.r)),
+                                        borderSide:
+                                        BorderSide(color: Colors.brown),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.r)),
+                                          borderSide: BorderSide(
+                                              color: Colors.white10)),
                                     ),
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return 'Please Enter Day';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                               ],
@@ -406,23 +491,13 @@ class _FaceRecognitionState extends State<FaceRecognition> {
     }
   }
 
-  //detect  face
-  // parameter img input image To get to know her
-  Future _detectFaces(File img) async {
-    final option = FaceDetectorOptions();
-    final faceDetector = FaceDetector(options: option);
-    // now detect input user
-    final inputImage = InputImage.fromFilePath(img.path);
-    faces = await faceDetector.processImage(inputImage);
-    //image processing
-    setState(() {
-      print(faces.length);
-    });
+  getFormatedDate(_date) {
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+    var inputDate = inputFormat.parse(_date);
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    return outputFormat.format(inputDate);
   }
 }
-
-
-
 
 //
 //   void pickImage() async{

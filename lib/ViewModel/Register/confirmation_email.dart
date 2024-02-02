@@ -18,7 +18,7 @@ class ConfirmationEmail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 100.h,
+                height: 60.h,
               ),
               FadeInDown(
                 delay: const Duration(milliseconds: 30),
@@ -70,7 +70,7 @@ class ConfirmationEmail extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 50.h,
+                height: 40.h,
               ),
               Padding(
                 padding: EdgeInsets.all(20.r),
@@ -100,14 +100,16 @@ class ConfirmationEmail extends StatelessWidget {
                                   maxLength: 1,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                    fillColor: Color(MyTheme.backgroundInterface),
+                                    fillColor:
+                                        Color(MyTheme.backgroundInterface),
                                     filled: true,
                                     hintStyle: TextStyle(
                                         color: Color(MyTheme.textRegister)),
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20.r)),
-                                      borderSide: BorderSide(color: Colors.brown),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.r)),
+                                      borderSide:
+                                          BorderSide(color: Colors.brown),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                         borderSide:
@@ -254,7 +256,8 @@ class ConfirmationEmail extends StatelessWidget {
                     Text(
                       'This Code expires in   ',
                       style: TextStyle(
-                          color: Color(MyTheme.textverifiCode), fontSize: 15.sp),
+                          color: Color(MyTheme.textverifiCode),
+                          fontSize: 15.sp),
                     ),
                     Text(
                       '5 Minutes',
@@ -270,58 +273,61 @@ class ConfirmationEmail extends StatelessWidget {
               Center(
                 child: FadeInRight(
                   delay: const Duration(milliseconds: 300),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 39.h,
-                        width: 195.w,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40.r)),
-                                side: BorderSide(
-                                    color: Color(MyTheme.borderverifiCode)),
-                                backgroundColor: Color(MyTheme.back_verifi_Code)),
-                            onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, LogIN.routeName, (route) => false);
-                            },
-                            child: Text(
-                              'Verify Code',
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(
-                                    MyTheme.text_Button,
-                                  )),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      SizedBox(
-                        height: 38.h,
-                        width: 194.w,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40.r)),
-                                side: BorderSide(
-                                    color: Color(MyTheme.borderTextField)),
-                                backgroundColor: Color(MyTheme.bGround_Button)),
-                            onPressed: () {},
-                            child: Text(
-                              'Resend Code',
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(
-                                    MyTheme.text_Button,
-                                  )),
-                            )),
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 39.h,
+                          width: 195.w,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40.r)),
+                                  side: BorderSide(
+                                      color: Color(MyTheme.borderverifiCode)),
+                                  backgroundColor:
+                                      Color(MyTheme.back_verifi_Code)),
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, LogIN.routeName, (route) => false);
+                              },
+                              child: Text(
+                                'Verify Code',
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(
+                                      MyTheme.text_Button,
+                                    )),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        SizedBox(
+                          height: 38.h,
+                          width: 194.w,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40.r)),
+                                  side: BorderSide(
+                                      color: Color(MyTheme.borderTextField)),
+                                  backgroundColor: Color(MyTheme.bGround_Button)),
+                              onPressed: () {},
+                              child: Text(
+                                'Resend Code',
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(
+                                      MyTheme.text_Button,
+                                    )),
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )

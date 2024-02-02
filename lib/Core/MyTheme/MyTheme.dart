@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class MyTheme {
   static const int backgroundGeneral = (0XFFA07757);
   static const int backgroundInterface = (0XFF987B71);
@@ -17,4 +19,7 @@ class MyTheme {
   static const int back_verifi_Code = (0XFF634E3A);
   static const int back_Post = (0XFFE8E1E1);
   static const int createAccount_login = (0XFF6562CD);
+
+
+
 }

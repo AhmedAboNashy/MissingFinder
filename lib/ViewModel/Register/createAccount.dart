@@ -18,6 +18,7 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController confirmpassword = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
+  TextEditingController emairOrMopilePhone = TextEditingController();
   var formKey = GlobalKey<FormState>();
   var formKey2 = GlobalKey<FormState>();
   @override
@@ -140,6 +141,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       FadeInRight(
                         delay: const Duration(milliseconds: 350),
                         child: TextFormField(
+                          controller: lastNameController,
                           keyboardType: TextInputType.name,
                           maxLines: 1,
                           decoration: InputDecoration(
@@ -188,6 +190,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   FadeInRight(
                     delay: const Duration(milliseconds: 400),
                     child: TextFormField(
+                      controller: emairOrMopilePhone,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         fillColor: Color(MyTheme.backgroundInterface),
@@ -211,8 +214,13 @@ class _CreateAccountState extends State<CreateAccount> {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please Enter E-mail or Phone';
                         }
-                        return null;
+
+                        var regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        if (!regex.hasMatch(value)) {
+                          return "Enter a valid e-mail";
+                        }
                       },
+                      // saved mail
                       onSaved: (email) {
                         _email = email;
                       },
@@ -316,6 +324,14 @@ class _CreateAccountState extends State<CreateAccount> {
                                 color: Color(MyTheme.borderTextField)),
                             backgroundColor: Color(MyTheme.bGround_Button)),
                         onPressed: () {
+                          // if (formKey.currentState!.validate()==true) {
+                          //   BlocProvider.of<AuthCubit>(context).logIn(
+                          //       phone: email.text,
+                          //       password: password.text);
+                          // } else {
+                          //   print('Un Successfull');
+                          // }
+
                           Navigator.pushNamed(
                               context, FaceRecognition.routeName);
 
