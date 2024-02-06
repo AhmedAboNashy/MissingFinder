@@ -56,33 +56,65 @@ class _ForgetPwByPhoneState extends State<ForgetPwByPhone> {
               SizedBox(
                 height: 20.h,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FadeInDown(
-                    delay: const Duration(milliseconds: 70),
-                    child: Text('Enter Your Mobile Number to get Link Reset',
+              BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is ResetWithPhoneSuccessState) {
+                    Navigator.pushNamed(
+                        context, ForgetPwWhenLoginBySms.routeName,
+                        arguments: phone.text);
+                  }
+                  if (state is ConfirmatinResetByPhoneToFailedState) {
+                    showAboutDialog(context: context, children: [
+                      Text(
+                        ' Phone is failed, or Connect To Internet',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(
-                              MyTheme.textColor,
-                            ))),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  FadeInDown(
-                    delay: const Duration(milliseconds: 100),
-                    child: Text('Your Password',
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(
-                              MyTheme.textColor,
-                            ))),
-                  ),
-                ],
+                          fontSize: 20.sp,
+                          color: Colors.black,
+                        ),
+                      )
+                    ]);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Container(
+                      alignment: Alignment.center,
+                      height: 50.h,
+                      width: 70.w,
+                      child: Text(state.ResetPassWithPhone),
+                    )));
+                  }
+                  // TODO: implement listener
+                },
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FadeInDown(
+                        delay: const Duration(milliseconds: 70),
+                        child:
+                            Text('Enter Your Mobile Number to get Link Reset',
+                                style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(
+                                      MyTheme.textColor,
+                                    ))),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      FadeInDown(
+                        delay: const Duration(milliseconds: 100),
+                        child: Text('Your Password',
+                            style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Color(
+                                  MyTheme.textColor,
+                                ))),
+                      ),
+                    ],
+                  );
+                },
               ),
               SizedBox(height: 40.h),
               SingleChildScrollView(
@@ -156,7 +188,6 @@ class _ForgetPwByPhoneState extends State<ForgetPwByPhone> {
                                     if (phone.text.trim().isEmpty == null) {
                                       return 'Please Enter  Phone';
                                     }
-
                                     return null;
                                   },
                                 ),

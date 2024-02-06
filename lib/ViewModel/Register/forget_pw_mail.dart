@@ -62,15 +62,14 @@ class _ForgetPwByMailState extends State<ForgetPwByMail> {
                 child: BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
                     if (state is ResetWithEmailSuccessState) {
-                      Navigator.pop(context);
 
                       Navigator.pushNamed(
-                          context, ForgetPwWhenLoginByMail.routeName);
+                          context, ForgetPwWhenLoginByMail.routeName,arguments: email.text);
                     }
                     if (state is ConfirmatinResetByMailToFailedState) {
                       showAboutDialog(context: context, children: [
                         Text(
-                          ' E-Mail is failed ',
+                          ' E-Mail is failed, or Connect To Internet' ,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20.sp,
@@ -239,9 +238,9 @@ class _ForgetPwByMailState extends State<ForgetPwByMail> {
                                 print('Un Successfull');
                               }
 
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  ForgetPwWhenLoginByMail.routeName, (
-                                      route) => false);
+                              // Navigator.pushNamedAndRemoveUntil(context,
+                              //     ForgetPwWhenLoginByMail.routeName, (
+                              //         route) => false);
                             },
                             child: Text(
                               AutofillHints.addressState

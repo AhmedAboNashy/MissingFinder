@@ -75,7 +75,9 @@ class _LogINState extends State<LogIN> {
                               height: 20.h,
                               width: 40.w,
                               child: Text(state.message),
-                            )));
+                            )
+                            )
+                            );
                           }
                           // TODO: implement listener
                         },
@@ -283,6 +285,7 @@ class _LogINState extends State<LogIN> {
                                               activeColor:
                                                   Color(MyTheme.backTextField),
                                               onChanged: (newBool) {
+
                                                 setState(() {
                                                   isCheked = newBool!;
                                                 });
@@ -354,7 +357,15 @@ class _LogINState extends State<LogIN> {
                             ],
                           );
                         },
-                      )))
-            ]))));
+                      )
+                  )
+              )
+            ]
+                )
+            )
+        )
+    );
   }
 }
+
+

@@ -4,9 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
 import 'package:missing_finder/ViewModel/LogIn/logIn.dart';
 
-class ConfirmationEmail extends StatelessWidget {
+class ConfirmationEmail extends StatefulWidget {
   static const String routeName = 'confirmationEmail';
 
+  @override
+  State<ConfirmationEmail> createState() => _ConfirmationEmailState();
+}
+
+class _ConfirmationEmailState extends State<ConfirmationEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -283,7 +288,8 @@ class ConfirmationEmail extends StatelessWidget {
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(40.r)),
+                                      borderRadius:
+                                          BorderRadius.circular(40.r)),
                                   side: BorderSide(
                                       color: Color(MyTheme.borderverifiCode)),
                                   backgroundColor:
@@ -311,10 +317,12 @@ class ConfirmationEmail extends StatelessWidget {
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(40.r)),
+                                      borderRadius:
+                                          BorderRadius.circular(40.r)),
                                   side: BorderSide(
                                       color: Color(MyTheme.borderTextField)),
-                                  backgroundColor: Color(MyTheme.bGround_Button)),
+                                  backgroundColor:
+                                      Color(MyTheme.bGround_Button)),
                               onPressed: () {},
                               child: Text(
                                 'Resend Code',

@@ -3,35 +3,40 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:missing_finder/Core/shared_preferences/constants/constants.dart';
-import 'package:missing_finder/Core/shared_preferences/local_network.dart';
-import 'package:path/path.dart';
+
+import 'package:missing_finder/Model/Models/auth_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   static const String base_Url = 'https://render-missing-finder.onrender.com';
 
   AuthCubit() : super(AuthInitialState());
-  //////////
+
+  ///////////////////////////////// logIn ////////////////////////////////////////////////////////
+
   void logIn({required String loginKey, required String password}) async {
     emit(LogInLoadingState());
     try {
       var data = jsonEncode({"loginKey": loginKey, "password": password});
-      Response response = await http.post(
-          Uri.parse('https://render-missing-finder.onrender.com/auth/login'),
-          body: data,
-          headers: {"Content-Type": "application/json"});
+      Response response = await http.post(Uri.parse('$base_Url/auth/login'),
+          body: data, headers: {"Content-Type": "application/json"});
       //  "ahmedabonashy1000@gmail.com",
       //  "Ahmed@123"
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        if (responseData['success'] == true) {
+        var res = AuthModel.fromJson(responseData);
+        if (res.success == true) {
+          debugPrint("User Login Success and his data is : $res");
 
-          debugPrint("User Login Success and his data is : $responseData");
-         //   await  CacheNetwork.SetToCache(key: "token", value: responseData['data']['token']);
-         //   await  CacheNetwork.SetToCache(key: "password", value: password);
-         // userToken = await CacheNetwork.getCachData(key: 'token');
-         // currentPassword = await CacheNetwork.getCachData(key: 'password');
+          var prefs = await SharedPreferences.getInstance();
+          prefs.setString("token", res.auth!);
+          // await CacheNetwork.SetToCache(
+          //     key: "token", value: responseData['data']['token']);
+          // await CacheNetwork.SetToCache(key: "password", value: password);
+          // userToken = await CacheNetwork.getCachData(key: 'userToken');
+          // passwordInbodyFromPostMan =
+          //     await CacheNetwork.getCachData(key: 'password');
           emit(LogInSuccessState());
         } else {
           print(responseData['Message']);
@@ -46,17 +51,17 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  //////////////////////////////////
+  //////////////////////////////////// Resset Password With Email ////////////////////////////////////////////
+
   void RessetPasswordWithEmail({required String email}) async {
     try {
       var data = jsonEncode({"email": email});
       Response response = await http.patch(
-          Uri.parse(
-              'https://render-missing-finder.onrender.com/auth/reconfirmResetPass/email'),
+          Uri.parse('$base_Url/auth/reconfirmResetPass/email'),
           body: data,
           headers: {"Content-Type": "application/json"});
-      //  "ahmedabonashy526@gmail.com",
-      //  "Ahmed@123"
+      //  "ahmedabonashy1000@gmail.com",
+      //  "Ahmed@12345"
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
@@ -77,14 +82,14 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-///////////////////////////////////
+////////////////////////////////  Resset Password  With Phone ///////////////////////////////////////////////
+
   void RessetPasswordWithPhone({required String phone}) async {
     emit(ResetWithPhoneSuccessState());
     try {
       var data = jsonEncode({"email": phone});
       Response response = await http.patch(
-          Uri.parse(
-              'https://render-missing-finder.onrender.com/auth/reconfirmResetPass/email'),
+          Uri.parse('$base_Url/auth/resetPass/phone'),
           body: data,
           headers: {"Content-Type": "application/json"});
       //  "ahmedabonashy526@gmail.com",
@@ -109,28 +114,30 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  ///////////////////////
+  ////////////////////////////  Change Password ////////////////////////////////////////////////////////////
 
-  void ResetPassword(
-      {required String currentPassword,
-      required String confirmPassword}) async {
+  void ChangePassword({
+    required String password,
+    required String confirmPassword,
+    required String email,
+
+    //required String confirmPassword
+  }) async {
     emit(ChangePasswordLoadingState());
-    Response response = await http.post(
+    var data = jsonEncode({
+      //key
+      "email": email,
+      "password": password,
+      "confirmPassword": confirmPassword
+    });
+    Response response = await http.patch(
         //5 Document
         Uri.parse("$base_Url/auth/resetPass/email"),
         headers: {
           "Content-Type": "application/json",
-          "Postman-Token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI 6IjY1NmNmMDA5YzYxY2ViMmE5Nzhj"
-                  "NjU0OSIsImlhdCI6MTcwMTYzOD E1My"
-                  "wiZXhwIjoxNzAxNjQ1MzUzfQ.8KLHNcEwqP4JalBqNLH1Eyvdo6 irU_4oF6Z9E1swr_k",
         },
-        body: {
-          //key
-          "password": currentPassword,
-          "confirmPassword": confirmPassword
-        });
-    //convert json to dart opject
+        body: data);
+    //convert json to dart opject tb h3ml disconnect w htsl beek elawl insta ...wla nd5ols google meet
     var responseDecoded = jsonDecode(response.body);
     if (response.statusCode == 200) {
       if (responseDecoded['success'] == true) {
@@ -140,6 +147,130 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } else {
       emit(ChangePasswordFailedState("Something went wrong,try again later "));
+    }
+  }
+
+/////////////////////////////////// Resend Code With Email /////////////////////////////////////////////////////
+
+  void ResendCodeWithEmail({required String email}) async {
+    emit(ResendCodeLoadingStateWithEmail());
+    try {
+      var data = jsonEncode({"email": email});
+      Response response = await http.patch(
+          Uri.parse('$base_Url/auth/reconfirmResetPass/email'),
+          body: data,
+          headers: {"Content-Type": "application/json"});
+      //  "ahmedabonashy1000@gmail.com",
+      //  "Ahmed@123"
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        emit(ResendCodeSuccessStateEmail());
+      } else {
+        print(responseData['message']);
+        debugPrint(
+            "Failed To Resend Code, reason is  : ${responseData['message']} ");
+        emit(ResendCodeFailedStateEmail(
+            errorToSendCodeWithEmail: responseData['message']));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(ResendCodeFailedStateEmail(errorToSendCodeWithEmail: e.toString()));
+    }
+  }
+
+//////////////////////////////// Active Account Password With Email ////////////////////////////////////////////
+
+  void activePasswordWithEmail(
+      {required String activationCode, required String loginKey}) async {
+    emit(ActiveCodeLoadingStateWithEmail());
+    try {
+      var data =
+          jsonEncode({"activationCode": activationCode, "loginKey": loginKey});
+      var response = await http.post(
+          Uri.parse('$base_Url/auth/activateAccount'),
+          body: data,
+          headers: {"Content-Type": "application/json"});
+      //  "ahmedabonashy1000@gmail.com",
+      //  "Ahmed@12345"
+      print(response.statusCode);
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        emit(ActiveCodeSuccessStateEmail());
+      } else {
+        print(responseData['message']);
+        debugPrint("Failed Active Code  : ${responseData['message']} ");
+        emit(ActiveCodeFailedStateEmail(
+            errorActiveSendCodeWithEmail: responseData['message']));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(ActiveCodeFailedStateEmail(
+          errorActiveSendCodeWithEmail: e.toString()));
+    }
+  }
+
+//////////////////////////////// Active Account Password With Phone ////////////////////////////////////////////
+
+  void activePasswordWithPhone(
+      {required String activationCode, required String loginKey}) async {
+    emit(ActiveCodeLoadingStateWithPhone());
+    try {
+      var data =
+          jsonEncode({"activationCode": activationCode, "loginKey": loginKey});
+      var response = await http.post(
+          Uri.parse('$base_Url/auth/activateAccount'),
+          body: data,
+          headers: {"Content-Type": "application/json"});
+      //  "ahmedabonashy1000@gmail.com",
+      //  "Ahmed@123"
+      print(response.statusCode);
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        // debugPrint(" Done : $responseData");
+        // await  CacheNetwork.inserToCache(key: "token", value: responseData['data']['token']);
+        emit(ActiveCodeSuccessStateEmail());
+      } else {
+        print(responseData['message']);
+        debugPrint("Failed Active Code  : ${responseData['message']} ");
+        emit(ActiveCodeFailedStatePhone(
+            errorActiveSendCodeWithPhone: responseData['message']));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(ActiveCodeFailedStatePhone(
+          errorActiveSendCodeWithPhone: e.toString()));
+    }
+  }
+
+/////////////////////////////////// Resend Code With Phone /////////////////////////////////////////////////////
+
+  void ResendCodeWithPhone({required String phone}) async {
+    emit(ResendCodeLoadingStateWithPhone());
+    try {
+      var data = jsonEncode({"phone": phone});
+      Response response = await http.patch(
+          Uri.parse('$base_Url/auth/reconfirmResetPass/phone'),
+          body: data,
+          headers: {"Content-Type": "application/json"});
+      //  "ahmedabonashy1000@gmail.com",
+      //  "Ahmed@123"
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        emit(ResendCodeSuccessStatePhone());
+      } else {
+        print(responseData['message']);
+        debugPrint(
+            "Failed To Resend Code, reason is  : ${responseData['message']} ");
+        emit(ResendCodeFailedStatePhone(
+            errorToSendCodeWithPhone: responseData['message']));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(ResendCodeFailedStatePhone(errorToSendCodeWithPhone: e.toString()));
     }
   }
 }

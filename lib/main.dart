@@ -10,36 +10,37 @@ import 'package:missing_finder/ViewModel/LogIn/forgot_Pw_phone_when%20registerin
 import 'package:missing_finder/ViewModel/LogIn/logIn.dart';
 import 'package:missing_finder/ViewModel/LogIn/reset_password.dart';
 import 'package:missing_finder/ViewModel/Logic/Cubit/auth_cubit.dart';
+import 'package:missing_finder/ViewModel/Logic/Cubit/layout_cubit.dart';
 import 'package:missing_finder/ViewModel/Register/confirmation_code_sms.dart';
 import 'package:missing_finder/ViewModel/Register/confirmation_email.dart';
 import 'package:missing_finder/ViewModel/Register/createAccount.dart';
 import 'package:missing_finder/ViewModel/Register/forget_pw_mail.dart';
 import 'package:missing_finder/ViewModel/Register/forget_pw_pohone.dart';
 import 'package:missing_finder/ViewModel/Register/face_recognition.dart';
+import 'package:missing_finder/bloc_0pserver.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Core/genertaorRoute.dart';
 import 'View/Welcome/completeShow.dart';
 
-Future <void> main() async{
- // initGetIt();
+Future<void> main() async {
+  // initGetIt();
   WidgetsFlutterBinding.ensureInitialized();
- // Bloc.observer = MyBlocObserver();
+  var prefs = await SharedPreferences.getInstance();
+  Bloc.observer = MyBlocObserver();
   await CacheNetwork.cashInitalization();
-  userToken= await CacheNetwork.getCachData(key: 'token');
-  currentPassword= await CacheNetwork.getCachData(key: 'currentPassword');
-  debugPrint('user token is : $userToken');
-  debugPrint('currentPassword is : $currentPassword');
-  print('token is ');
-  ////////////////
-  WidgetsFlutterBinding.ensureInitialized();
   // bt5ly el app bta3y myfthsh eela lma yenfz el amr bta3y
- await  CacheNetwork.cashInitalization();
-  runApp(const MyApp());
+  userToken = await CacheNetwork.getCachData(key: 'token');
+  passwordInbodyFromPostMan = await CacheNetwork.getCachData(key: 'token');
+  debugPrint('user token is : $userToken');
+  debugPrint('currentPassword is : $passwordInbodyFromPostMan');
+  print('token is main ');
+  ///////////////////////////////////////////////
+  runApp(MyApp(prefs.getString("token")!));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  final String token;
+  MyApp(this.token);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,14 @@ class MyApp extends StatelessWidget {
         // Use builder only if you need to use library outside ScreenUtilInit context
         child: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => AuthCubit()),
+            BlocProvider(
+              create: (context) => AuthCubit(),
+              lazy: true,
+            ),
+            BlocProvider(
+              create: (context) => LayoutCubit(),
+              lazy: true,
+            ),
           ],
           child: MaterialApp(
             // onGenerateRoute:RouteGenerator.generateRoute,
@@ -73,6 +81,7 @@ class MyApp extends StatelessWidget {
               HomeScreen.routeName: (_) => HomeScreen(),
               CompleteShow.routeName: (_) => CompleteShow(),
             },
+            // initialRoute: token != "" ? HomeScreen.routeName : LogIN.routeName,
             initialRoute: LogIN.routeName,
           ),
         ));
