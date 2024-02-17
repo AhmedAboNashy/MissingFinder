@@ -55,8 +55,8 @@ class _LogINState extends State<LogIN> {
                       child: BlocConsumer<AuthCubit, AuthState>(
                         listener: (context, state) {
                           if (state is LogInSuccessState) {
-
-                          Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                HomeScreen.routeName, (route) => false);
                           }
                           if (state is FailedToLoginState) {
                             showAboutDialog(context: context, children: [
@@ -75,9 +75,7 @@ class _LogINState extends State<LogIN> {
                               height: 20.h,
                               width: 40.w,
                               child: Text(state.message),
-                            )
-                            )
-                            );
+                            )));
                           }
                           // TODO: implement listener
                         },
@@ -251,7 +249,6 @@ class _LogINState extends State<LogIN> {
                                             // Navigator.pushNamed(context,
                                             //     HomeScreen.routeName);
                                           },
-
                                           child: Text(
                                             state is LogInLoadingState
                                                 ? "Loading.."
@@ -285,7 +282,6 @@ class _LogINState extends State<LogIN> {
                                               activeColor:
                                                   Color(MyTheme.backTextField),
                                               onChanged: (newBool) {
-
                                                 setState(() {
                                                   isCheked = newBool!;
                                                 });
@@ -357,15 +353,7 @@ class _LogINState extends State<LogIN> {
                             ],
                           );
                         },
-                      )
-                  )
-              )
-            ]
-                )
-            )
-        )
-    );
+                      )))
+            ]))));
   }
 }
-
-

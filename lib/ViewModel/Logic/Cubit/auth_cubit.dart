@@ -22,7 +22,7 @@ class AuthCubit extends Cubit<AuthState> {
       Response response = await http.post(Uri.parse('$base_Url/auth/login'),
           body: data, headers: {"Content-Type": "application/json"});
       //  "ahmedabonashy1000@gmail.com",
-      //  "Ahmed@123"
+      //  "Ahmed@1234"
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         var res = AuthModel.fromJson(responseData);
@@ -54,14 +54,16 @@ class AuthCubit extends Cubit<AuthState> {
   //////////////////////////////////// Resset Password With Email ////////////////////////////////////////////
 
   void RessetPasswordWithEmail({required String email}) async {
+    emit(ConfirmatinResetByMailLoadingState());
+    print("$email,hereeeeee is Loading.... ");
     try {
       var data = jsonEncode({"email": email});
-      Response response = await http.patch(
-          Uri.parse('$base_Url/auth/reconfirmResetPass/email'),
+      Response response = await http.post(
+          Uri.parse('$base_Url/auth/forgetcode/email'),
           body: data,
           headers: {"Content-Type": "application/json"});
       //  "ahmedabonashy1000@gmail.com",
-      //  "Ahmed@12345"
+      //  "Ahmed@123"
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
@@ -82,7 +84,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-////////////////////////////////  Resset Password  With Phone ///////////////////////////////////////////////
+////////////////////////////////  Reset Password  With Phone ///////////////////////////////////////////////
 
   void RessetPasswordWithPhone({required String phone}) async {
     emit(ResetWithPhoneSuccessState());
@@ -182,13 +184,13 @@ class AuthCubit extends Cubit<AuthState> {
 //////////////////////////////// Active Account Password With Email ////////////////////////////////////////////
 
   void activePasswordWithEmail(
-      {required String activationCode, required String loginKey}) async {
+      {required String forgetCode, required String email}) async {
     emit(ActiveCodeLoadingStateWithEmail());
+    print(forgetCode);
     try {
-      var data =
-          jsonEncode({"activationCode": activationCode, "loginKey": loginKey});
-      var response = await http.post(
-          Uri.parse('$base_Url/auth/activateAccount'),
+      var data = jsonEncode({"forgetCode": forgetCode, "email": email});
+      var response = await http.patch(
+          Uri.parse('$base_Url/auth/coderesetPass/email'),
           body: data,
           headers: {"Content-Type": "application/json"});
       //  "ahmedabonashy1000@gmail.com",
@@ -197,7 +199,12 @@ class AuthCubit extends Cubit<AuthState> {
       var responseData = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        emit(ActiveCodeSuccessStateEmail());
+        if (responseData['success'] == true) {
+          emit(ActiveCodeSuccessStateEmail());
+        } else {
+          emit(ActiveCodeFailedStateEmail(
+              errorActiveSendCodeWithEmail: responseData['message']));
+        }
       } else {
         print(responseData['message']);
         debugPrint("Failed Active Code  : ${responseData['message']} ");
@@ -231,7 +238,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (response.statusCode == 200) {
         // debugPrint(" Done : $responseData");
         // await  CacheNetwork.inserToCache(key: "token", value: responseData['data']['token']);
-        emit(ActiveCodeSuccessStateEmail());
+        emit(ActiveCodeSuccessStatePhone());
       } else {
         print(responseData['message']);
         debugPrint("Failed Active Code  : ${responseData['message']} ");

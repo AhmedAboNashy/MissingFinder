@@ -4,6 +4,7 @@ part of 'auth_cubit.dart';
 abstract class AuthState {}
 
 class AuthInitialState extends AuthState {}
+
 //////////////////////////// login //////////////////////////////////////////////////////////////////
 class LogInSuccessState extends AuthState {}
 
@@ -27,10 +28,7 @@ class ConfirmatinResetByMailToFailedState extends AuthState {
   ConfirmatinResetByMailToFailedState({required this.ResetPassWithMail});
 }
 
-
 ///////////////////////// Active Code With Email /////////////////////////////////////////////////////
-
-
 
 class ActiveCodeLoadingStateWithEmail extends AuthState {}
 
@@ -41,8 +39,6 @@ class ActiveCodeFailedStateEmail extends AuthState {
 
   ActiveCodeFailedStateEmail({required this.errorActiveSendCodeWithEmail});
 }
-
-
 
 ///////////////////////// Resend Code With Email //////////////////////////////////////////////////////
 
@@ -55,8 +51,6 @@ class ResendCodeFailedStateEmail extends AuthState {
 
   ResendCodeFailedStateEmail({required this.errorToSendCodeWithEmail});
 }
-
-
 
 ////////////////////////// Reset With Phone  /////////////////////////////////////////////////////////
 
@@ -81,11 +75,7 @@ class ChangePasswordFailedState extends AuthState {
   ChangePasswordFailedState(this.error);
 }
 
-
-
 ///////////////////////// Active Code With Phone /////////////////////////////////////////////////////
-
-
 
 class ActiveCodeLoadingStateWithPhone extends AuthState {}
 

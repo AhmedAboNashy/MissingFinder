@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:missing_finder/Core/MyTheme/MyTheme.dart';
 import 'package:missing_finder/ViewModel/LogIn/reset_password.dart';
 import 'package:missing_finder/ViewModel/Logic/Cubit/auth_cubit.dart';
+
 class ForgetPwWhenLoginByMail extends StatefulWidget {
   static const String routeName = 'ForgetPWhenLoginEmail';
 
@@ -371,8 +372,8 @@ class _ForgetPwWhenLoginByMailState extends State<ForgetPwWhenLoginByMail> {
                                     // h3ml intance mn auth Cubit
                                     BlocProvider.of<AuthCubit>(context)
                                         .activePasswordWithEmail(
-                                      loginKey: email,
-                                      activationCode: num1.text +
+                                      email: email,
+                                      forgetCode: num1.text +
                                           num2.text +
                                           num3.text +
                                           num4.text,
@@ -446,8 +447,7 @@ class _ForgetPwWhenLoginByMailState extends State<ForgetPwWhenLoginByMail> {
           ),
         ),
       );
-    }
-    );
+    });
   }
   // reSend(){
   //
